@@ -71,6 +71,9 @@ RUN \
 # patch snoopy.inc for rss fix
  cd /usr/share/webapps/rutorrent/php && \
  patch < /defaults/patches/snoopy.patch && \
+ 
+# get additional theme
+ git clone git://github.com/phlooo/ruTorrent-MaterialDesign.git /usr/share/webapps/rutorrent/plugins/theme/themes/MaterialDesign && \
 
 # compile mediainfo packages
  curl -o \
