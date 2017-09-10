@@ -1,4 +1,4 @@
-FROM lsiobase/alpine:3.5
+FROM lsiobase/alpine:3.6
 MAINTAINER sparklyballs
 
 # set version label
@@ -7,13 +7,29 @@ ARG VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
 
 # package version
-ARG MEDIAINF_VER="0.7.91"
+ARG MEDIAINF_VER="0.7.94"
 
 # copy patches
 COPY patches/ /defaults/patches/
 
-# install runtime packages
+
+# install build packages
 RUN \
+ apk add --no-cache --virtual=build-dependencies \
+	autoconf \
+	automake \
+	cppunit-dev \
+	curl-dev \
+	file \
+	g++ \
+	gcc \
+	git \
+	libressl-dev \
+	libtool \
+	make \
+	ncurses-dev && \
+
+# install runtime packages
  apk add --no-cache \
 	ca-certificates \
 	curl \
@@ -36,20 +52,6 @@ RUN \
 	unzip \
 	wget \
 	zip && \
-
-# install build packages
- apk add --no-cache --virtual=build-dependencies \
-	autoconf \
-	automake \
-	cppunit-dev \
-	curl-dev \
-	file \
-	g++ \
-	gcc \
-	libressl-dev \
-	libtool \
-	make \
-	ncurses-dev && \
 
 # install webui
  mkdir -p \
