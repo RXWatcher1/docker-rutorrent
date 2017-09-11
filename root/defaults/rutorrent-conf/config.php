@@ -58,8 +58,6 @@
 						// For example, if Webserver and rtorrent users are in the same group then the value may be 0770.
 
 	$tempDirectory = '/config/rutorrent/profiles/tmp/';			// Temp directory. Absolute path with trail slash. If null, then autodetect will be used.
-
-	$defaultTheme = "MaterialDesign";
 	
 	$canUseXSendFile = true;		// Use X-Sendfile feature if it exist
 
