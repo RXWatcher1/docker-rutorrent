@@ -45,6 +45,7 @@ RUN \
 	php7-fpm \
 	php7-json  \
 	php7-mbstring \
+	php7-sockets \
 	php7-pear \
 	rtorrent \
 	screen \
