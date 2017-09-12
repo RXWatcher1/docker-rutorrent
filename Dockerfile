@@ -49,7 +49,6 @@ RUN \
 	rtorrent \
 	screen \
 	dtach \
-	dtach \
 	tar \
 	unrar \
 	unzip \
@@ -59,6 +58,7 @@ RUN \
 	zlib \
 	zlib-dev \
 	libxml2-dev \
+	git \
 	perl-archive-zip \
 	perl-net-ssleay \
 	perl-digest-sha1 \
