@@ -8,6 +8,7 @@ LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DA
 
 # package version
 ARG MEDIAINF_VER="0.7.94"
+ARG CURL_VER="7.54.1"
 
 # copy patches
 COPY patches/ /defaults/patches/
@@ -19,7 +20,6 @@ RUN \
 	autoconf \
 	automake \
 	cppunit-dev \
-	curl-dev \
 	perl-dev \
 	file \
 	g++ \
@@ -33,7 +33,6 @@ RUN \
 # install runtime packages
  apk add --no-cache \
 	ca-certificates \
-	curl \
 	fcgi \
 	ffmpeg \
 	geoip \
@@ -64,6 +63,14 @@ RUN \
 	perl-net-ssleay \
 	perl-digest-sha1 \
 	zip && \
+
+# compile curl to fix tracker timeouts for rtorrent
+cd /tmp && \
+mkdir curl && \
+cd curl && \
+wget -qO- https://curl.haxx.se/download/curl-${CURL_VER}.tar.gz | tar xz --strip 1 && \
+./configure --with-ssl && make -j ${NB_CORES} && make install && \
+ldconfig /usr/bin && ldconfig /usr/lib && \	
 
 # install webui
  mkdir -p \
