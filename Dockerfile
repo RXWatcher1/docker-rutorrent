@@ -1,10 +1,10 @@
-FROM lsiobase/alpine:3.6
-MAINTAINER sparklyballs
+FROM lsiobase/alpine:3.7
 
 # set version label
 ARG BUILD_DATE
 ARG VERSION
 LABEL build_version="Linuxserver.io version:- ${VERSION} Build-date:- ${BUILD_DATE}"
+LABEL maintainer="sparklyballs"
 
 # package version
 ARG MEDIAINF_VER="0.7.94"
@@ -13,9 +13,8 @@ ARG CURL_VER="7.54.1"
 # copy patches
 COPY patches/ /defaults/patches/
 
-
-# install build packages
 RUN \
+ echo "**** install packages ****" && \
  apk add --no-cache --virtual=build-dependencies \
 	autoconf \
 	automake \
@@ -38,6 +37,7 @@ RUN \
 	geoip \
 	gzip \
 	logrotate \
+	mediainfo \
 	nginx \
 	php7 \
 	php7-cgi \
@@ -48,6 +48,7 @@ RUN \
 	php7-pear \
 	rtorrent \
 	screen \
+	sox \
 	dtach \
 	tar \
 	unrar \
@@ -63,6 +64,7 @@ RUN \
 	perl-net-ssleay \
 	perl-digest-sha1 \
 	zip && \
+ echo "**** install webui ****" && \
 
 # compile curl to fix tracker timeouts for rtorrent
 cd /tmp && \
@@ -86,10 +88,12 @@ ldconfig /usr/bin && ldconfig /usr/lib && \
 	/defaults/rutorrent-conf/ && \
  rm -rf \
 	/defaults/rutorrent-conf/users && \
-
-# patch snoopy.inc for rss fix
+ echo "**** patch snoopy.inc for rss fix ****" && \
  cd /usr/share/webapps/rutorrent/php && \
  patch < /defaults/patches/snoopy.patch && \
+ echo "**** fix logrotate ****" && \
+ sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf && \
+ echo "**** cleanup ****" && \
  
 # install autodl-irssi perl modules
  perl -MCPAN -e 'my $c = "CPAN::HandleConfig"; $c->load(doit => 1, autoconfig => 1); $c->edit(prerequisites_policy => "follow"); $c->edit(build_requires_install_policy => "yes"); $c->commit' && \
@@ -130,10 +134,7 @@ ldconfig /usr/bin && ldconfig /usr/lib && \
 	build-dependencies && \
  rm -rf \
 	/etc/nginx/conf.d/default.conf \
-	/tmp/* && \
-
-# fix logrotate
- sed -i "s#/var/log/messages {}.*# #g" /etc/logrotate.conf
+	/tmp/*
 
 # add local files
 COPY root/ /
